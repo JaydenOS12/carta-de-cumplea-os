@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>🎂 Carta de Cumpleaños 🎉</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -16,28 +17,57 @@
       overflow: hidden;
     }
 
-    .carta {
+    /* Sobre cerrado */
+    #sobre {
+      background: #ff4d6d;
+      width: 350px;
+      height: 200px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    #sobre button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #fff;
+      border: none;
+      border-radius: 10px;
+      color: #ff4d6d;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    /* Carta */
+    #carta {
+      display: none; /* Se muestra al abrir el sobre */
       background: #fff;
       padding: 30px;
       border-radius: 20px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
       max-width: 600px;
       text-align: center;
-      animation: aparecer 2s ease forwards;
+      animation: aparecer 1.5s ease forwards;
     }
 
     h1 {
+      font-family: 'Pacifico', cursive;
       color: #ff4d6d;
-      font-size: 2em;
+      font-size: 2.5em;
     }
 
-    p {
+    #mensaje {
       font-size: 1.2em;
       color: #333;
       line-height: 1.6;
+      min-height: 100px;
     }
 
-    button {
+    button.action {
       margin-top: 20px;
       padding: 10px 20px;
       background: #ff4d6d;
@@ -47,18 +77,36 @@
       font-size: 1em;
       cursor: pointer;
       transition: 0.3s;
+      margin-right: 10px;
     }
 
-    button:hover {
+    button.action:hover {
       background: #e63950;
     }
 
-    /* Animación de globos */
+    /* Globos */
     .globo {
       position: absolute;
       bottom: -100px;
       font-size: 2em;
       animation: subir 6s linear infinite;
+    }
+
+    /* Confeti */
+    .confeti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      top: -10px;
+      opacity: 0.8;
+      animation: caer 3s linear forwards;
+    }
+
+    @keyframes caer {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
     }
 
     @keyframes subir {
@@ -70,33 +118,112 @@
       from { opacity: 0; transform: scale(0.8); }
       to { opacity: 1; transform: scale(1); }
     }
+
+    /* Regalo secreto */
+    #regalo {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: #ffecd2;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      font-size: 1.2em;
+    }
   </style>
 </head>
 <body>
-  <div class="carta">
-    <h1>🎉 ¡Feliz Cumpleaños! 🎂</h1>
-    <p>
-      Hoy celebro a una persona muy especial.  
-      Que este día esté lleno de sonrisas, abrazos y momentos inolvidables.  
-      Gracias por existir y hacer el mundo más bonito ✨💖.
-    </p>
-    <button onclick="soltarGlobos()">🎈 Toca aquí 🎈</button>
+
+  <!-- Sobre cerrado -->
+  <div id="sobre">
+    <h2>📬 Tienes una carta</h2>
+    <button onclick="abrirSobre()">Abrir sobre</button>
   </div>
 
+  <!-- Carta -->
+  <div id="carta">
+    <h1>🎉 ¡Feliz Cumpleaños Katherine!🎂</h1>
+    <h1>🎉 ¡Que los cumplas feliz! 🎉 </h1>
+    <p id="mensaje"></p>
+    <button class="action" onclick="soltarGlobos()">🎈 Toca aquí 🎈</button>
+    <button class="action" onclick="mostrarRegalo()">🎁 Ver regalo secreto</button>
+    <button class="action" onclick="tocarMusica()">🎵 Reproducir música</button>
+
+    <!-- Regalo con mensaje personalizado -->
+    <div id="regalo">
+      ¡Eres increíble y te deseo un año lleno de alegría y amor! 💖
+      ¡Estare siempre para ti cuando lo necesites eres mi favorita!
+      pd: hay que ir a veracruz jajjaja
+
+      "Porque yo sé los planes que tengo para ustedes —afirma el Señor—, planes de bienestar y no de calamidad, a fin de darles un futuro y una esperanza."
+      Jeremias 29:11
+    </div>
+  </div>
+
+  <!-- Música -->
+  <audio id="musica" loop>
+    <source src="cumpleaños.mp3" type="audio/mpeg">
+  </audio>
+
   <script>
+    // Abrir sobre y mostrar carta
+    function abrirSobre() {
+      document.getElementById('sobre').style.display = 'none';
+      document.getElementById('carta').style.display = 'block';
+      escribir();       // Inicia la máquina de escribir
+      soltarConfeti();  // Confeti al abrir
+    }
+
+    // Texto máquina de escribir
+    const texto = "Hoy celebro a una persona muy especial. Que este día esté lleno de sonrisas, abrazos y momentos inolvidables. Gracias por existir y hacer el mundo más bonito ✨💖.";
+    let i = 0;
+    function escribir() {
+      const mensaje = document.getElementById("mensaje");
+      if (i < texto.length) {
+        mensaje.innerHTML += texto.charAt(i);
+        i++;
+        setTimeout(escribir, 50);
+      }
+    }
+
+    // Globos de colores aleatorios
     function soltarGlobos() {
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 20; i++) {
         let globo = document.createElement("div");
         globo.classList.add("globo");
         globo.innerHTML = "🎈";
         globo.style.left = Math.random() * 100 + "vw";
+        globo.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
         globo.style.animationDuration = (4 + Math.random() * 3) + "s";
         document.body.appendChild(globo);
-
-        setTimeout(() => {
-          globo.remove();
-        }, 7000);
+        setTimeout(() => { globo.remove(); }, 7000);
       }
+    }
+
+    // Confeti al abrir
+    function soltarConfeti() {
+      for (let i = 0; i < 50; i++) {
+        let c = document.createElement("div");
+        c.classList.add("confeti");
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        c.style.width = (5 + Math.random() * 10) + "px";
+        c.style.height = c.style.width;
+        c.style.animationDuration = (2 + Math.random() * 2) + "s";
+        document.body.appendChild(c);
+        setTimeout(() => { c.remove(); }, 4000);
+      }
+    }
+
+    // Mostrar mensaje de regalo secreto
+    function mostrarRegalo() {
+      const regalo = document.getElementById("regalo");
+      regalo.style.display = "block";
+    }
+
+    // Reproducir música
+    function tocarMusica() {
+      const audio = document.getElementById("musica");
+      audio.play();
     }
   </script>
 </body>
